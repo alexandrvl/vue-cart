@@ -1,0 +1,36 @@
+jibDockerBuild {
+  dependsOn(copyJs)
+}
+
+jib {
+  from {
+    image = 'nginx:1.18.0'
+  }
+  to {
+    image = "${project.name}:latest"
+  }
+  container {
+    entrypoint = ['/docker-entrypoint.sh']
+    args = ['/nginx-entrypoint.sh']
+    ports = ['8090']
+    creationTime = 'USE_CURRENT_TIMESTAMP'
+  }
+  extraDirectories {
+    paths {
+      path {
+        from = copyJs.destinationDir
+        into = '/usr/share/nginx/html'
+      }
+      path {
+        from = "${rootDir}/docker/nginx"
+        into = '/etc/nginx/conf.d'
+      }
+      path {
+        from = "${rootDir}/docker/jib"
+      }
+    }
+    permissions = [
+      '/nginx-entrypoint.sh': '755'
+    ]
+  }
+}

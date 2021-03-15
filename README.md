@@ -19,6 +19,14 @@ npm run dev
 # build for production with minification
 npm run build
 
+# build docker image
+./gradlew clean jibDockerBuild
+
+# run docker
+
+docker run -p 9000:8090 -e UPSTREAM_URL=host.docker.internal:8080 demo-shop-ui:latest
+It will create reverse proxy on port 9000, and forward /api and /actuator requests to localhost:8080
+
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
